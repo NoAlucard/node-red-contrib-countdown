@@ -41,25 +41,27 @@ module.exports = function(RED) {
             }
         }
 
-        function stopTimer() {
+        function stopTimer(sendPayload=true) {
             node.status({
                 fill: "red", shape: "dot", text: "Stopped: " + timeout
             });
+            
+            if(sendPayload){
+                // Timer Message
+                var msg = {}
+                msg.payload = RED.util.evaluateNodeProperty(node.config.payloadTimerStop, node.config.payloadTimerStopType, node); 
+                if (node.config.topic !== '') {
+                    msg.topic = node.config.topic;
+                }
 
-            // Timer Message
-            var msg = {}
-            msg.payload = RED.util.evaluateNodeProperty(node.config.payloadTimerStop, node.config.payloadTimerStopType, node); 
-            if (node.config.topic !== '') {
-                msg.topic = node.config.topic;
-            }
+                var remainingTicksMsg = { "payload": 0 };
 
-            var remainingTicksMsg = { "payload": 0 };
-
-            // only send stop msg if type is not equal "send nothing" option
-            if (node.config.payloadTimerStopType == "nul") {
-                node.send([null, remainingTicksMsg]);
-            } else {
-                node.send([msg, remainingTicksMsg]);
+                // only send stop msg if type is not equal "send nothing" option
+                if (node.config.payloadTimerStopType == "nul") {
+                    node.send([null, remainingTicksMsg]);
+                } else {
+                    node.send([msg, remainingTicksMsg]);
+                }
             }
 
             endTicker();
@@ -124,7 +126,7 @@ module.exports = function(RED) {
                 }
             } else {
                 if (msg.payload === false || msg.payload === 0) {
-                    stopTimer();
+                    stopTimer(node.config.sendMessageOnCancel);
                 } else {
                     if (ticker) {
                         if (node.config.resetWhileRunning) {
