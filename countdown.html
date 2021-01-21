@@ -42,7 +42,7 @@
   <div class="form-row">
     <label for="node-input-sendMessageOnCancel">&nbsp;</label>
     <input style="display:inline-block; width:15px; vertical-align:top;" type="checkbox" id="node-input-sendMessageOnCancel">
-    <span style="display:inline-block; width:70%">Send Off payload if Timer is canceld</span>&nbsp;
+    <span style="display:inline-block; width:70%">Send off payload if timer is canceled</span>&nbsp;
   </div>
 
   <div class="form-row">
@@ -137,7 +137,8 @@
       timer: { value: 30, validate:RED.validators.number()  },
       resetWhileRunning: { value: false },
       setTimeToNewWhileRunning: { value: true },
-      startCountdownOnControlMessage: { value: false }
+      startCountdownOnControlMessage: { value: false },
+      sendMessageOnCancel: { value: true }
     },
     inputs: 1,
     outputs: 2,
